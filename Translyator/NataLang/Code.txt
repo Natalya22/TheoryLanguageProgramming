@@ -1,0 +1,18 @@
+# fst_prog #
+launch fst:
+  description: 
+    integer simple; 
+    integer simple1; 
+    integer simple2; 
+    record struct {integer temp; float temp_f; integer temp_i;} fst_struc;
+  end
+  start
+    fst_struc.temp_i = 5;
+    fst_struc.temp = 4;
+    simple = 6;
+    simple1 = 7;
+    simple2 = simple+simple1;
+    fst_struc.temp_f = 2.3;
+    endif
+  finish
+off

@@ -1,0 +1,9 @@
+C:\Users\Lenovo\source\repos\Translyator\Translyator\bin\Debug\Translyator.exe.config
+C:\Users\Lenovo\source\repos\Translyator\Translyator\bin\Debug\Translyator.exe
+C:\Users\Lenovo\source\repos\Translyator\Translyator\bin\Debug\Translyator.pdb
+C:\Users\Lenovo\source\repos\Translyator\Translyator\obj\Debug\Translyator.csprojAssemblyReference.cache
+C:\Users\Lenovo\source\repos\Translyator\Translyator\obj\Debug\Translyator.Form1.resources
+C:\Users\Lenovo\source\repos\Translyator\Translyator\obj\Debug\Translyator.Properties.Resources.resources
+C:\Users\Lenovo\source\repos\Translyator\Translyator\obj\Debug\Translyator.csproj.GenerateResource.cache
+C:\Users\Lenovo\source\repos\Translyator\Translyator\obj\Debug\Translyator.exe
+C:\Users\Lenovo\source\repos\Translyator\Translyator\obj\Debug\Translyator.pdb
