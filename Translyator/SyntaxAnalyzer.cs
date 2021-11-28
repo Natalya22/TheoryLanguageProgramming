@@ -6,16 +6,16 @@ namespace Translyator
 {
   class SyntaxAnalyzer
   {
-    Stack<token> _attrSt = new Stack<token>();
-    Stack<string> _typeSt = new Stack<string>();
-    Dictionary<string, List<NameTok>> _nameRecordAndFields = new Dictionary<string, List<NameTok>>();
-    List<NameTok> _recordFields = new List<NameTok>();
-    Stack<string> _codeSt = new Stack<string>();
-    List<string> _codeLines = new List<string>();
-    int _codeLineNum = 0;
-    int _codeTmpIndex = 0;
-    Stack<List<int>> _codeBoolSt = new Stack<List<int>>();
-    Stack<int> _parserState = new Stack<int>();
+    public Stack<token> _attrSt = new Stack<token>();
+    public Stack<string> _typeSt = new Stack<string>();
+    public Dictionary<string, List<NameTok>> _nameRecordAndFields = new Dictionary<string, List<NameTok>>();
+    public List<NameTok> _recordFields = new List<NameTok>();
+    public Stack<string> _codeSt = new Stack<string>();
+    public List<string> _codeLines = new List<string>();
+    public int _codeLineNum = 0;
+    public int _codeTmpIndex = 0;
+    public Stack<List<int>> _codeBoolSt = new Stack<List<int>>();
+    public Stack<int> _parserState = new Stack<int>();
     struct _elementTR
     {
       public int ElType;
@@ -52,45 +52,49 @@ namespace Translyator
           switch (elementTR.ElType)
           {
             case (int)elType.elError: return "syntax error!";
-            case (int)elType.elMove: 
-                 if ((predToken.name == "lnch") && (elementTR.ElPar == 3))
-                 {
-                    if (!AddProgName(ref currentToken, ref lexicalAnalyzer))
-                      return "Lexical error!";
-                 }
-                _parserState.Push(elementTR.ElPar);
-                if (CommonData.Terms.ContainsKey(lex))
+            case (int)elType.elMove:
+              if ((predToken.name == "lnch") && (elementTR.ElPar == 3))
+              {
+                if (!AddProgName(ref currentToken, ref lexicalAnalyzer))
+                  return "Lexical error!";
+              }
+              _parserState.Push(elementTR.ElPar);
+              if (CommonData.Terms.ContainsKey(lex))
+              {
+                if (currentToken.name == ".")
                 {
-                  if (currentToken.name == ".")
-                  {
-                    _attrSt.Push(predToken.tok);
-                  }
-                  predToken = currentToken;
-                  lexicalAnalyzer.nextToken(out currentToken);
-                  if (currentToken.name == "")
-                  {
-                    return "Lexical error!";
-                  } 
+                  _attrSt.Push(predToken.tok);
                 }
-                lex = currentToken.name;
-                break;
+                predToken = currentToken;
+                lexicalAnalyzer.nextToken(out currentToken);
+                if (currentToken.name == "")
+                {
+                  return "Lexical error!";
+                }
+              }
+              lex = currentToken.name;
+              break;
             case (int)elType.elTurn:
-                for (int i=1; i <= elementTR.ElPar; i++)
+              for (int i = 1; i <= elementTR.ElPar; i++)
+              {
+                _parserState.Pop();
+              }
+              lex = elementTR.Left;
+              if (elementTR.Act != "")
+              {
+                string result = _semanticAction(elementTR.Act, ref predToken, ref lexicalAnalyzer);
+                if (result != "")
                 {
-                  _parserState.Pop();
+                  return "Syntax error: " + result;
                 }
-                lex = elementTR.Left;
-                if (elementTR.Act != "")
-                {
-                  string result = _semanticAction(elementTR.Act, ref predToken, ref lexicalAnalyzer);
-                  if (result != "")
-                  {
-                    return "Syntax error: " + result;
-                  }
-                }
-                break;
+              }
+              break;
           }
         }
+      }
+      else
+      {
+        return "Program is empty!";
       }
       return "ok";
     }
@@ -117,7 +121,7 @@ namespace Translyator
         case "A2":
           if (token.tok.cat != (int)cat.none)
           {
-            return "идентификатор уже опрелен!";
+            return "идентификатор уже определен!";
           }
           _attrSt.Push(token.tok);
           break;
@@ -145,33 +149,13 @@ namespace Translyator
           lexicalAnalyzer._userIdent.Remove(lex);
           lexicalAnalyzer._userIdent.Add(lex, token.tok);
           _typeSt.Push(lex);
-          //_attrSt.Push(token.tok);
           break;
         // Заполнение таблицы полей записи, относящейся к ней.
         case "A5":
-          //tok = _attrSt.Peek();
-          //string recordName = findLexInTable(tok, lexicalAnalyzer);
-          //_nameRecordAndFields.Add(recordName, _recordFields);
           _nameRecordAndFields.Add(_typeSt.Peek(), _recordFields);
           break;
         // Установка типа Запись у переменных
         case "A6":
-          //var arrAtrSt = _attrSt.ToArray();
-          //tok = arrAtrSt[arrAtrSt.Length-1];
-          //string recName = findLexInTable(tok, lexicalAnalyzer);
-          //for (int i = 0; i < arrAtrSt.Length-1; i++)
-          //{
-          //  tok = arrAtrSt[i];
-          //  lex = findLexInTable(tok, lexicalAnalyzer);
-          //  tok.tip = recName;
-          //  tok.cat = (int)cat.identif_name;
-          //  lexicalAnalyzer._userIdent.Remove(lex);
-          //  lexicalAnalyzer._userIdent.Add(lex, tok);
-          //  // удаляем перменные типа записи
-          //  _attrSt.Pop();
-          //}
-          //// удаляем имя записи
-          //_attrSt.Pop();
           string recName = _typeSt.Pop();
           for (int i = 0; i < _attrSt.Count; i++)
           {
@@ -200,8 +184,8 @@ namespace Translyator
           tok.tip = type;
           nameTok.tok = tok;
           nameTok.name = findLexInTable(tok, lexicalAnalyzer);
-          // Здесь либо надо добавить удаление из общей таблицы идентификаторов, 
-          // либо измененить тип и категорию этой сущности
+          // !!!
+          lexicalAnalyzer._userIdent.Remove(nameTok.name);
           _recordFields.Add(nameTok);
           break;
         // BackPatch, nextlist
@@ -257,12 +241,12 @@ namespace Translyator
           lex = findLexInTable(tok, lexicalAnalyzer);
           if (!(lexicalAnalyzer._userIdent.TryGetValue(lex, out tok)))
           {
-            return "такой записи нет!";
+            return "такого идентификатора нет!";
           }
           string nameType = tok.tip;
           if (!(_nameRecordAndFields.ContainsKey(nameType)))
           {
-            return "у данного идентификатора другой тип записи!";
+            return "такой записи нет!";
           }
           break;
         // Проверка, что переменная относится к этой записи.
@@ -452,6 +436,7 @@ namespace Translyator
         case "A26":
           break;
         case "A27":
+          // !!! Maybe need add type to stack
           break;
         case "A30":
           if (_typeSt.Peek() != "boolean")
@@ -479,15 +464,6 @@ namespace Translyator
           //Gen("goto ?");
           break;
         case "A34":
-          string t = token.tok.tip;
-          if (t == "integer" || t == "float")
-          {
-            //AttrSt.push("@" + LexA._identif[token.attr]._lex);
-          }
-          else
-          {
-            return "Type error";
-          }
           break;
       }
       return "";

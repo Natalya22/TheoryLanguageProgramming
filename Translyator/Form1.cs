@@ -28,12 +28,43 @@ namespace Translyator
         return;
       }
       result = syntaxAnalyzer.analyze(lexicalAnalyzer);
+      Error.Text = result;
       if (result != "ok")
       {
-        Error.Text = result;
         return;
       }
-      Output.Text = result;
+      string res = "";
+      for (int i = 0; i < syntaxAnalyzer._codeLines.Count; i++)
+      {
+        res += syntaxAnalyzer._codeLines[i] + '\n';
+      }
+      Output.Text = res;
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+      LexicalAnalyzer._sizeTokens = 0;
+      lexicalAnalyzer._userIdent.Clear();
+      lexicalAnalyzer._userNumber.Clear();
+      lexicalAnalyzer._tokens.Clear();
+      lexicalAnalyzer._curToken = 0;
+      lexicalAnalyzer._numUserIdent = 0;
+      lexicalAnalyzer._numUserNumber = 0;
+
+      syntaxAnalyzer._codeLines.Clear();
+      syntaxAnalyzer._attrSt.Clear();
+      syntaxAnalyzer._codeBoolSt.Clear();
+      syntaxAnalyzer._codeLineNum = 0;
+      syntaxAnalyzer._codeSt.Clear();
+      syntaxAnalyzer._codeTmpIndex = 0;
+      syntaxAnalyzer._nameRecordAndFields.Clear();
+      syntaxAnalyzer._parserState.Clear();
+      syntaxAnalyzer._recordFields.Clear();
+      syntaxAnalyzer._typeSt.Clear();
+
+      UserCode.Text = "";
+      Output.Text = "";
+      Error.Text = "";
     }
   }
 }

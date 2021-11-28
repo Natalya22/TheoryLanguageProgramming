@@ -20,7 +20,7 @@ namespace Translyator
       CommonData.FillTransitionTable();
 
       // Общая инфа, связанная с синтаксическим анализатором
-      CommonData.loadXML(@"C:\Users\Lenovo\source\repos\Translyator\Translyator\NataLang\SLR_Table2.xml");
+      CommonData.loadXML(@"C:\Users\Lenovo\source\repos\Translyator\Translyator\NataLang\SLR_TableBase.xml");
       CommonData.FillNeterminalsAndTerms();
 
       Application.EnableVisualStyles();

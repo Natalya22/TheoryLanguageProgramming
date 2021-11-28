@@ -15,11 +15,11 @@ namespace Translyator
   {
 		public Dictionary<string, token> _userIdent = new Dictionary<string, token>();
 		public Dictionary<string, token> _userNumber = new Dictionary<string, token>();
-		private List<NameTok> _tokens = new List<NameTok>();
-		private static int _sizeTokens = 0;
-		private int _numUserIdent = 0;
-		private int _numUserNumber = 0;
-		private int _curToken = 0;
+		public List<NameTok> _tokens = new List<NameTok>();
+		public static int _sizeTokens = 0;
+		public int _numUserIdent = 0;
+		public int _numUserNumber = 0;
+		public int _curToken = 0;
 
 		public string WorkingLecsAnalyze(string userCode)
 		{
